@@ -1,7 +1,7 @@
+// productRoutes.js
+
 import express from "express";
 import {
-  brainTreePaymentController,
-  braintreeTokenController,
   createProductController,
   deleteProductController,
   getProductController,
@@ -14,13 +14,14 @@ import {
   realtedProductController,
   searchProductController,
   updateProductController,
+  getExpiredProductsController, // New controller function to handle expired products
 } from "../controllers/productController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 import formidable from "express-formidable";
 
 const router = express.Router();
 
-//routes
+// Create product
 router.post(
   "/create-product",
   requireSignIn,
@@ -28,7 +29,8 @@ router.post(
   formidable(),
   createProductController
 );
-//routes
+
+// Update product
 router.put(
   "/update-product/:pid",
   requireSignIn,
@@ -37,41 +39,42 @@ router.put(
   updateProductController
 );
 
-//get products
+// Get all products
 router.get("/get-product", getProductController);
 
-//single product
+// Get single product
 router.get("/get-product/:slug", getSingleProductController);
 
-//get photo
+// Get product photo
 router.get("/product-photo/:pid", productPhotoController);
 
-//delete rproduct
+// Delete product
 router.delete("/delete-product/:pid", deleteProductController);
 
-//filter product
+// Filter products
 router.post("/product-filters", productFiltersController);
 
-//product count
+// Get product count
 router.get("/product-count", productCountController);
 
-// product per page
+// Get product list per page
 router.get("/product-list/:page", productListController);
 
-//search product
+// Search products
 router.get("/search/:keyword", searchProductController);
 
-//similar product
+// Get related products
 router.get("/related-product/:pid/:cid", realtedProductController);
 
-//category wise product
+// Get products by category
 router.get("/product-category/:slug", productCategoryController);
 
-//payments routes
-//token
-router.get("/braintree/token", braintreeTokenController);
-
-//payments
-router.post("/braintree/payment", requireSignIn, brainTreePaymentController);
+// Get expired products
+router.get(
+  "/expired-products",
+  requireSignIn,
+  isAdmin,
+  getExpiredProductsController
+);
 
 export default router;

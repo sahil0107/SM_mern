@@ -34,6 +34,10 @@ const productSchema = new mongoose.Schema(
     shipping: {
       type: Boolean,
     },
+    expiryDate: {
+      type: Date, // Adding the expiry date field
+      required: true,
+    },
   },
   { timestamps: true }
 );
